@@ -1,19 +1,30 @@
 import styles from './ContactListItem.module.css';
 import { ReactComponent as DelBtn } from '../../../icons/del.svg';
 import PropTypes from 'prop-types';
-const ContactListItem = ({ id, name, number, onClick }) => {
+import { useDeleteContactMutation } from 'redux/contactsApi';
+import Spiner from 'components/Spiner';
+
+const ContactListItem = ({ id, name, phone }) => {
+  const [deleteContact, { isLoading }] = useDeleteContactMutation();
+
   return (
     <>
       <p className={styles.text}>
-        <span className={styles.text__name}>{name}:</span> {number}
+        <span className={styles.text__name}>{name}:</span> {phone}
       </p>
       <button
         className={styles.delBtn}
-        onClick={() => onClick(id)}
+        onClick={() => deleteContact(id)}
         type="button"
       >
-        Delete
-        <DelBtn className={styles.delBtnIcon} />
+        {isLoading ? (
+          <Spiner width={16} height={16} color="white" />
+        ) : (
+          <>
+            <span> Delete</span>
+            <DelBtn className={styles.delBtnIcon} />
+          </>
+        )}
       </button>
     </>
   );
@@ -22,8 +33,7 @@ const ContactListItem = ({ id, name, number, onClick }) => {
 ContactListItem.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  phone: PropTypes.string.isRequired,
 };
 
 export default ContactListItem;

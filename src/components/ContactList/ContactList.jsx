@@ -1,22 +1,23 @@
 import styles from './ContactList.module.css';
 import ContactListItem from './ContactListItem/ContactListItem';
-import { deleteContact, getContacts } from 'redux/contactsSlice';
-import { getFilter } from 'redux/contactsSlice';
-import { useDispatch, useSelector } from 'react-redux';
+
+import { getFilter } from 'redux/filterSlice';
+import { useSelector } from 'react-redux';
+import { useGetContactsQuery } from 'redux/contactsApi';
 
 const ContactList = () => {
-  // const contacts = useSelector(state => state.items);
-  // const filter = useSelector(state => state.filter);
-
-  const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
-  const dispatch = useDispatch();
+
+  const { data } = useGetContactsQuery();
+  console.log(data);
 
   const makeFilteredMarkup = () => {
     const lowerCaseFilter = filter.toLocaleLowerCase();
-    const filteredArray = [...contacts].filter(contact =>
-      contact.name.toLocaleLowerCase().includes(lowerCaseFilter)
-    );
+    const filteredArray =
+      data &&
+      [...data].filter(contact =>
+        contact.name.toLocaleLowerCase().includes(lowerCaseFilter)
+      );
     return filteredArray;
   };
 
@@ -27,14 +28,9 @@ const ContactList = () => {
   }
   return (
     <ul className={styles.list}>
-      {filteredArray.map(({ id, name, number }) => (
+      {filteredArray.map(({ id, name, phone }) => (
         <li key={id} className={styles.item}>
-          <ContactListItem
-            id={id}
-            name={name}
-            number={number}
-            onClick={() => dispatch(deleteContact(id))}
-          />
+          <ContactListItem id={id} name={name} phone={phone} />
         </li>
       ))}
     </ul>

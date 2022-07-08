@@ -1,7 +1,7 @@
 import styles from './ContactForm.module.css';
-import { addContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/contactsSlice';
-import { useDispatch, useSelector } from 'react-redux';
+
+import { useGetContactsQuery } from 'redux/contactsApi';
+import { useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
@@ -9,7 +9,7 @@ function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const { data } = useGetContactsQuery();
 
   const handleChange = event => {
     switch (event.currentTarget.name) {
@@ -28,10 +28,12 @@ function ContactForm() {
     e.preventDefault();
 
     // For deal array of contacts in lower case
-    const allContacts = contacts.reduce((acc, contact) => {
-      acc.push(contact.name.toLocaleLowerCase());
-      return acc;
-    }, []);
+    const allContacts =
+      data &&
+      data.reduce((acc, contact) => {
+        acc.push(contact.name.toLocaleLowerCase());
+        return acc;
+      }, []);
 
     // Check if the contact is already in the contact list
     if (allContacts.includes(name.toLocaleLowerCase())) {
@@ -41,7 +43,7 @@ function ContactForm() {
 
     const contactData = { id: nanoid(), name, number };
 
-    dispatch(addContact(contactData));
+    // dispatch(addContact(contactData));
     setName('');
     setNumber('');
   };

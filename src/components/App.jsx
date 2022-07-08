@@ -2,12 +2,12 @@ import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import EmptyMessage from './EmptyMessage';
 import Filter from './Filter';
-import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/contactsSlice';
+import Spiner from './Spiner';
+
+import { useGetContactsQuery } from 'redux/contactsApi';
 
 export function App() {
-  const contacts = useSelector(getContacts);
-  console.log(contacts);
+  const { data, isFetching } = useGetContactsQuery();
 
   return (
     <div className="wrapper">
@@ -18,14 +18,15 @@ export function App() {
         <ContactForm />
         <div className="contacts-secton">
           <h2 className="page-title">Your contacts</h2>
-          {contacts.length > 0 ? (
+          {isFetching && <Spiner width={50} height={50} color="blue" />}
+          {data && data.length > 0 ? (
             <>
               <Filter />
 
               <ContactList />
             </>
           ) : (
-            <EmptyMessage />
+            !isFetching && <EmptyMessage />
           )}
         </div>
       </div>
