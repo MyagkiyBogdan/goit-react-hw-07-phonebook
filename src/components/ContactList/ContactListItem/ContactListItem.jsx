@@ -18,7 +18,10 @@ const ContactListItem = ({ id, name, phone }) => {
         type="button"
       >
         {isLoading ? (
-          <Spiner width={16} height={16} color="white" />
+          <div className={styles.wrapper}>
+            <span className={styles.delText}>Delete</span>
+            <Spiner width={16} height={16} color="white" />
+          </div>
         ) : (
           <>
             <span> Delete</span>

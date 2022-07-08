@@ -7,7 +7,7 @@ import Spiner from './Spiner';
 import { useGetContactsQuery } from 'redux/contactsApi';
 
 export function App() {
-  const { data, isFetching } = useGetContactsQuery();
+  const { data, isLoading } = useGetContactsQuery();
 
   return (
     <div className="wrapper">
@@ -18,15 +18,14 @@ export function App() {
         <ContactForm />
         <div className="contacts-secton">
           <h2 className="page-title">Your contacts</h2>
-          {isFetching && <Spiner width={50} height={50} color="blue" />}
+          {isLoading && <Spiner width={50} height={50} color="blue" />}
           {data && data.length > 0 ? (
             <>
               <Filter />
-
               <ContactList />
             </>
           ) : (
-            !isFetching && <EmptyMessage />
+            !isLoading && <EmptyMessage />
           )}
         </div>
       </div>

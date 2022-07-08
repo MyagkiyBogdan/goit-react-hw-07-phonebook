@@ -1,15 +1,14 @@
 import styles from './ContactForm.module.css';
-
 import { useGetContactsQuery } from 'redux/contactsApi';
-import { useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
+import Spiner from 'components/Spiner';
 import { useState } from 'react';
-
+import { useAddContactMutation } from 'redux/contactsApi';
 function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const dispatch = useDispatch();
+
   const { data } = useGetContactsQuery();
+  const [addContact, { isLoading }] = useAddContactMutation();
 
   const handleChange = event => {
     switch (event.currentTarget.name) {
@@ -41,9 +40,7 @@ function ContactForm() {
       return;
     }
 
-    const contactData = { id: nanoid(), name, number };
-
-    // dispatch(addContact(contactData));
+    addContact(name, number);
     setName('');
     setNumber('');
   };
@@ -81,7 +78,11 @@ function ContactForm() {
         />
       </div>
       <button type="submit" className={styles.addBtn}>
-        Add contact
+        {isLoading ? (
+          <Spiner width={18} height={18} color="#fff" />
+        ) : (
+          <span>Add contact</span>
+        )}
       </button>
     </form>
   );

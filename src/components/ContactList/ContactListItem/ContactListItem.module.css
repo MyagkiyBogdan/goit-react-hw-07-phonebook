@@ -49,3 +49,13 @@
     height: 15px;
   }
 }
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delText {
+  padding-right: 5px;
+}
